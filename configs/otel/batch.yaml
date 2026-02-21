@@ -7,11 +7,6 @@ receivers:
         endpoint: :4318
 
 processors:
-  memory_limiter:
-    check_interval: 2s
-    limit_mib: 400
-    spike_limit_mib: 100
-
   batch:
     timeout: 5s
     send_batch_size: 1024
@@ -22,14 +17,12 @@ exporters:
 
 extensions:
   health_check:
-  pprof:
-    endpoint: :1777
 
 service:
-  extensions: [health_check, pprof]
+  extensions: [health_check]
 
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [batch]
       exporters: [prometheus]
